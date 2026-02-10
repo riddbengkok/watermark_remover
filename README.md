@@ -39,58 +39,187 @@ A powerful web application for removing watermarks from videos with an interacti
 
 ## 🔧 Installation
 
-### 1. Clone the repository
+### Quick Setup for macOS 🍎
+
+Follow these steps to get the app running on your MacBook:
+
+#### Step 1: Clone the repository
+
+Open Terminal and run:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/watermark_remover.git
+git clone https://github.com/riddbengkok/watermark_remover.git
 cd watermark_remover
 ```
 
-### 2. Install FFmpeg
+#### Step 2: Install FFmpeg
 
-**macOS:**
+FFmpeg is required for video processing. Install using Homebrew:
+
 ```bash
+# If you don't have Homebrew, install it first:
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install FFmpeg
 brew install ffmpeg
+
+# Verify installation
+ffmpeg -version
 ```
 
-**Ubuntu/Debian:**
-```bash
-sudo apt update
-sudo apt install ffmpeg
-```
+#### Step 3: Create virtual environment
 
-**Windows:**
-Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
-
-### 3. Create virtual environment
+Create an isolated Python environment:
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 ```
 
-### 4. Install Python dependencies
+You should see `(venv)` in your terminal prompt.
+
+#### Step 4: Install Python dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or install manually:
 
 ```bash
 pip install flask werkzeug
 ```
 
-### 5. Create required folders
+#### Step 5: Create required folders
 
 ```bash
-mkdir uploads outputs
+mkdir -p uploads outputs
 ```
 
-## 🚀 Usage
+---
 
-### Start the application
+### 📦 Installation for Other Platforms
+
+<details>
+<summary>Ubuntu/Debian Linux</summary>
 
 ```bash
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Install FFmpeg
+sudo apt update
+sudo apt install ffmpeg python3 python3-venv python3-pip
+
+# Clone repository
+git clone https://github.com/riddbengkok/watermark_remover.git
+cd watermark_remover
+
+# Setup virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create folders
+mkdir -p uploads outputs
+```
+</details>
+
+<details>
+<summary>Windows</summary>
+
+1. **Install FFmpeg:**
+   - Download from [ffmpeg.org](https://ffmpeg.org/download.html)
+   - Extract and add to System PATH
+   - Open CMD and verify: `ffmpeg -version`
+
+2. **Clone repository:**
+   ```cmd
+   git clone https://github.com/riddbengkok/watermark_remover.git
+   cd watermark_remover
+   ```
+
+3. **Setup virtual environment:**
+   ```cmd
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+
+4. **Install dependencies:**
+   ```cmd
+   pip install -r requirements.txt
+   ```
+
+5. **Create folders:**
+   ```cmd
+   mkdir uploads outputs
+   ```
+</details>
+
+---
+
+## 🚀 Running the App
+
+### On macOS 🍎
+
+#### Method 1: Use the startup script (Easiest)
+
+```bash
+# Make the script executable (first time only)
+chmod +x start.sh
+
+# Run the app
+./start.sh
+```
+
+#### Method 2: Manual startup
+
+```bash
+# Navigate to project folder
+cd watermark_remover
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Run the app
 python app.py
 ```
 
-The app will be available at `http://localhost:5001`
+The app will start and show:
+
+```
+ * Running on http://0.0.0.0:5001
+ * Running on http://127.0.0.1:5001
+```
+
+#### Open in browser
+
+Open your web browser and go to:
+
+```
+http://localhost:5001
+```
+
+#### Stop the app
+
+Press `Ctrl + C` in the terminal to stop the server.
+
+---
+
+### 💡 Quick Start (macOS One-Liner)
+
+After initial setup, you can start the app with:
+
+```bash
+cd watermark_remover && source venv/bin/activate && python app.py
+```
+
+Or create an alias in your `~/.zshrc` or `~/.bash_profile`:
+
+```bash
+alias watermark='cd ~/Documents/watermark_remover && source venv/bin/activate && python app.py'
+```
+
+Then just run: `watermark`
 
 ### Basic Workflow
 
@@ -286,22 +415,39 @@ If you encounter any issues or have questions:
 
 **⭐ If this project helped you, please give it a star on GitHub! ⭐**
 
-## 🚀 Quick Start
+## 🚀 Quick Start for macOS
+
+**Complete setup from scratch:**
 
 ```bash
-# Clone and setup
-git clone https://github.com/YOUR_USERNAME/watermark_remover.git
+# 1. Install Homebrew (if not installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Install FFmpeg
+brew install ffmpeg
+
+# 3. Clone and setup
+git clone https://github.com/riddbengkok/watermark_remover.git
 cd watermark_remover
 python3 -m venv venv
 source venv/bin/activate
-pip install flask werkzeug
-mkdir uploads outputs
+pip install -r requirements.txt
+mkdir -p uploads outputs
 
-# Run
+# 4. Run the app
 python app.py
+```
 
-# Open browser
-# Visit: http://localhost:5001
+**Open browser and visit:** `http://localhost:5001`
+
+---
+
+**Next time (after setup):**
+
+```bash
+cd watermark_remover
+source venv/bin/activate
+python app.py
 ```
 
 That's it! 🎉 Start removing watermarks from your videos!
