@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpusClip Watermark Remover - Bulk Video Processing</title>
+    <meta name="description"
+        content="Remove multiple OpusClip watermarks from your videos instantly with bulk processing">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <rect width="40" height="40" rx="10" fill="url(#gradient1)" />
+                    <path d="M20 10L28 20L20 30L12 20L20 10Z" fill="white" opacity="0.9" />
+                    <defs>
+                        <linearGradient id="gradient1" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#667eea" />
+                            <stop offset="100%" stop-color="#764ba2" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>OpusClip Watermark Remover</h1>
+            </div>
+            <p class="subtitle">Remove multiple watermarks • Bulk processing • One-click solution</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSection">
+                <div class="upload-card">
+                    <div class="upload-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h2>Drop your videos here</h2>
+                    <p>Bulk upload supported - select multiple files at once</p>
+                    <input type="file" id="fileInput" accept="video/*" multiple style="display: none;">
+                    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                        Choose Videos (Multiple)
+                    </button>
+                    <p class="supported-formats">Supports: MP4, AVI, MOV, MKV, WebM (Max 500MB per file)</p>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="settings-section" id="settingsSection" style="display: none;">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h3>Watermark Removal Settings</h3>
+                        <p class="file-count">Selected: <span id="fileCount">0</span> video(s)</p>
+                    </div>
+                    <p class="settings-description">Configure watermark positions to remove (pre-filled for OpusClip
+                        watermarks on 1080x1920 videos)</p>
+
+                    <!-- Removal Method -->
+                    <div class="method-section">
+                        <label for="method">Removal Method</label>
+                        <select id="method" class="input">
+                            <option value="delogo" selected>Smart Removal (Delogo) - Recommended</option>
+                            <option value="blur">Blur Watermark</option>
+                            <option value="cover">Cover with Black Box</option>
+                        </select>
+                    </div>
+
+                    <!-- Live Preview Section -->
+                    <div class="live-preview-section" id="livePreviewSection" style="display: none;">
+                        <h4>🎬 Live Position Preview</h4>
+                        <p class="preview-description">
+                            The red box shows where the watermark will be removed.
+                            <strong>Drag the red box</strong> to move it, or <strong>drag the corners</strong> to resize
+                            it.
+                        </p>
+
+                        <div class="preview-container" id="previewContainer">
+                            <canvas id="previewCanvas"></canvas>
+                            <div class="preview-loading" id="previewLoading">
+                                <div class="loading-spinner"></div>
+                                <p>Extracting video frame...</p>
+                            </div>
+                        </div>
+
+                        <button class="btn-secondary-small" onclick="refreshPreview()" style="margin-top: 1rem;">
+                            🔄 Refresh Preview
+                        </button>
+                    </div>
+
+                    <!-- Watermark Regions -->
+                    <div class="watermarks-container" id="watermarksContainer">
+                        <!-- Watermark 1: OpusClip Logo (Top Left) -->
+                        <div class="watermark-region" data-wm-id="0">
+                            <div class="watermark-header">
+                                <div class="watermark-title">
+                                    <input type="checkbox" id="wm0_enabled" checked>
+                                    <label for="wm0_enabled">
+                                        <strong>Watermark 1: OpusClip Logo (Middle Left)</strong>
+                                    </label>
+                                </div>
+                                <button class="btn-remove" onclick="removeWatermark(0)"
+                                    title="Remove this watermark">×</button>
+                            </div>
+                            <div class="settings-grid">
+                                <div class="setting-group">
+                                    <label>X Position</label>
+                                    <input type="number" class="input wm-x" value="119" min="0">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Y Position</label>
+                                    <input type="number" class="input wm-y" value="253" min="0">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Width</label>
+                                    <input type="number" class="input wm-width" value="362" min="10">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Height</label>
+                                    <input type="number" class="input wm-height" value="92" min="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Watermark 2: Bottom Caption (Optional) -->
+                        <div class="watermark-region" data-wm-id="1">
+                            <div class="watermark-header">
+                                <div class="watermark-title">
+                                    <input type="checkbox" id="wm1_enabled">
+                                    <label for="wm1_enabled">
+                                        <strong>Watermark 2: Bottom Caption (Optional)</strong>
+                                    </label>
+                                </div>
+                                <button class="btn-remove" onclick="removeWatermark(1)"
+                                    title="Remove this watermark">×</button>
+                            </div>
+                            <div class="settings-grid">
+                                <div class="setting-group">
+                                    <label>X Position</label>
+                                    <input type="number" class="input wm-x" value="100" min="0">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Y Position</label>
+                                    <input type="number" class="input wm-y" value="1700" min="0">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Width</label>
+                                    <input type="number" class="input wm-width" value="900" min="10">
+                                </div>
+                                <div class="setting-group">
+                                    <label>Height</label>
+                                    <input type="number" class="input wm-height" value="200" min="10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add More Watermarks -->
+                    <button class="btn-add-watermark" onclick="addWatermark()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                            <path d="M12 8v8M8 12h8" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        Add Another Watermark Region
+                    </button>
+
+                    <!-- Quick Presets -->
+                    <div class="preset-positions">
+                        <p class="preset-label">Quick Presets (for selected watermark):</p>
+                        <div class="preset-buttons">
+                            <button class="btn-preset" onclick="setPresetPosition('top-left')">OpusClip (Top
+                                Left)</button>
+                            <button class="btn-preset" onclick="setPresetPosition('bottom-right')">Bottom Right</button>
+                            <button class="btn-preset" onclick="setPresetPosition('bottom-center')">Bottom
+                                Center</button>
+                            <button class="btn-preset" onclick="setPresetPosition('bottom-caption')">Bottom
+                                Caption</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary btn-process" id="processBtn" onclick="processVideos()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            style="display: inline; vertical-align: middle; margin-right: 8px;">
+                            <polygon points="5 3 19 12 5 21 5 3" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" fill="currentColor" />
+                        </svg>
+                        Start Bulk Processing
+                    </button>
+                </div>
+            </section>
+
+            <!-- Processing Queue -->
+            <section class="queue-section" id="queueSection" style="display: none;">
+                <h3>Processing Queue</h3>
+                <div id="queueList" class="queue-list"></div>
+                <button class="btn-secondary" onclick="resetApp()" style="margin-top: 2rem;">
+                    Process More Videos
+                </button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by FFmpeg • Built with ❤️ for content creators • Pre-configured for OpusClip watermarks</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
