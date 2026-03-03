@@ -9,9 +9,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Configuration
-UPLOAD_FOLDER = 'uploads'
-OUTPUT_FOLDER = 'outputs'
+# Configuration — use /tmp on serverless (Vercel/Lambda), local dirs otherwise
+_IS_SERVERLESS = os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME')
+UPLOAD_FOLDER = '/tmp/uploads' if _IS_SERVERLESS else 'uploads'
+OUTPUT_FOLDER = '/tmp/outputs' if _IS_SERVERLESS else 'outputs'
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv', 'webm'}
 
 # Ensure folders exist
@@ -362,6 +363,19 @@ def serve_preview_image(preview_id):
         return send_file(frame_path, mimetype='image/jpeg')
     
     return jsonify({'error': 'Frame not found'}), 404
+
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for uptime monitoring"""
+    ffmpeg_available = subprocess.run(['which', 'ffmpeg'], capture_output=True).returncode == 0
+    return jsonify({
+        'status': 'ok',
+        'ffmpeg': 'available' if ffmpeg_available else 'NOT FOUND - video processing will fail',
+        'upload_folder': UPLOAD_FOLDER,
+        'output_folder': OUTPUT_FOLDER,
+        'serverless': bool(_IS_SERVERLESS)
+    })
 
 
 if __name__ == '__main__':
