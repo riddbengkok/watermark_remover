@@ -1,0 +1,49 @@
+# Python virtual environment - never upload this
+venv/
+env/
+ENV/
+.venv/
+
+# Video files - too large for Vercel
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.m4v
+
+# Processing folders - ephemeral, not needed
+uploads/
+outputs/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Preview/temp images
+*.jpg
+*.jpeg
+*.png
+frame_*.jpg
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
+
+# Local env files
+.env
+.env.local
